@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>DA – Apparatus Difficulty</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        background: #f5f5f5;
+    }
+
+    h1 {
+        text-align: center;
+    }
+
+    .btn {
+        padding: 12px 20px;
+        margin: 8px;
+        font-size: 18px;
+        cursor: pointer;
+        border: none;
+        border-radius: 6px;
+        background: #ddd;
+        transition: background 0.2s;
+    }
+
+    .btn:hover {
+        background: #ccc;
+    }
+
+    #validate {
+        background: #4CAF50;
+        color: white;
+    }
+
+    #undo {
+        background: #e67e22;
+        color: white;
+    }
+
+    #markA {
+        background: #9b59b6;
+        color: white;
+    }
+
+    #result {
+        margin-top: 20px;
+        font-size: 24px;
+        font-weight: bold;
+        text-align: center;
+    }
+</style>
+</head>
+<body>
+
+<h1>DA – Apparatus Difficulty</h1>
+
+<div>
+    <button class="btn" onclick="addDifficulty(0.0)">0.0</button>
+    <button class="btn" onclick="addDifficulty(0.2)">0.2</button>
+    <button class="btn" onclick="addDifficulty(0.3)">0.3</button>
+    <button class="btn" onclick="addDifficulty(0.4)">0.4</button>
+</div>
+
+<div>
+    <button id="undo" class="btn" onclick="undoLast()">Undo Last</button>
+    <button id="markA" class="btn" onclick="markAsA()">Mark as A</button>
+</div>
+
+<div>
+    <button id="validate" class="btn" onclick="validateScore()">Validate</button>
+</div>
+
+<div id="result"></div>
+
+<script>
+    let difficulties = [];
+    let aCount = 0;
+
+    function addDifficulty(value) {
+        let finalValue = value;
+
+        // Rule: Only first 15 difficulties count
+        if (difficulties.length >= 15) {
+            finalValue = 0.0;
+        }
+
+        difficulties.push({ value: finalValue, isA: false });
+    }
+
+    function markAsA() {
+        if (difficulties.length === 0) return;
+
+        let last = difficulties[difficulties.length - 1];
+
+        last.isA = true;
+
+        // Rule: Only first 3 A elements count
+        if (aCount >= 3) {
+            last.value = 0.0;
+        }
+
+        aCount++;
+    }
+
+    function undoLast() {
+        if (difficulties.length === 0) return;
+
+        let last = difficulties.pop();
+
+        if (last.isA) {
+            aCount--;
+        }
+    }
+
+    function validateScore() {
+        let total = difficulties.reduce((sum, d) => sum + d.value, 0);
+        document.getElementById("result").textContent =
+            "Total DA Score: " + total.toFixed(1);
+    }
+</script>
+
+</body>
+</html>
