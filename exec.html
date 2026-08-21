@@ -2,316 +2,100 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>RG – Execution Judging</title>
+  <title>RG Execution Judging</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-    :root {
-      --bg: #0f172a;
-      --card: #1e293b;
-      --text: #e5e7eb;
-
-      /* Penalty colors (green → red) */
-      --p1: #22c55e; /* 0.1 */
-      --p2: #84cc16; /* 0.3 */
-      --p3: #eab308; /* 0.5 */
-      --p4: #f97316; /* 0.7 */
-      --p5: #ef4444; /* 1.0 */
-
-      --accent: #38bdf8;
-    }
-
-    * {
-      box-sizing: border-box;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    }
-
-    body {
-      margin: 0;
-      height: 100vh;
-      width: 100vw;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--bg);
-      color: var(--text);
-    }
-
-    .app {
-      width: 100%;
-      height: 100%;
-      padding: 2rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .card {
-      background: var(--card);
-      border-radius: 1.2rem;
-      padding: 2rem;
-      width: 100%;
-      box-shadow: 0 20px 40px rgba(15, 23, 42, 0.7);
-      border: 1px solid rgba(148, 163, 184, 0.3);
-    }
-
-    .title {
-      font-size: 1.6rem;
-      font-weight: 600;
-      margin-bottom: 1rem;
-      text-align: center;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .penalties-grid {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 1rem;
-      margin-bottom: 2rem;
-    }
-
-    .btn-penalty {
-      padding: 1.5rem 0;
-      font-size: 1.6rem;
-      font-weight: 600;
-      border-radius: 1rem;
-      border: none;
-      cursor: pointer;
-      color: #0b1120;
-      transition: transform 0.08s ease, box-shadow 0.08s ease;
-    }
-
-    .btn-penalty:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 10px 20px rgba(0,0,0,0.4);
-    }
-
-    .info-row {
-      display: flex;
-      justify-content: space-between;
-      font-size: 1.2rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .controls {
-      display: flex;
-      gap: 1rem;
-    }
-
-    .btn-undo,
-    .btn-validate {
-      flex: 1;
-      padding: 1.2rem;
-      font-size: 1.4rem;
-      font-weight: 600;
-      border-radius: 1rem;
-      border: none;
-      cursor: pointer;
-      transition: transform 0.08s ease, box-shadow 0.08s ease;
-    }
-
-    .btn-undo {
-      background: #111827;
-      color: #f97316;
-      border: 1px solid rgba(249, 115, 22, 0.4);
-    }
-
-    .btn-undo:disabled {
-      opacity: 0.4;
-      cursor: default;
-    }
-
-    .btn-validate {
-      background: var(--accent);
-      color: #0b1120;
-    }
-
-    .btn-validate:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 10px 20px rgba(56, 189, 248, 0.4);
-    }
-
-    /* Modal */
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(15, 23, 42, 0.75);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 20;
-    }
-
-    .modal-backdrop.visible {
-      display: flex;
-    }
-
-    .modal {
-      background: #020617;
-      border-radius: 1.2rem;
-      padding: 2rem;
-      width: 100%;
-      max-width: 400px;
-      border: 1px solid rgba(148, 163, 184, 0.5);
-      box-shadow: 0 24px 48px rgba(15, 23, 42, 0.9);
-    }
-
-    .modal-title {
-      font-size: 1.4rem;
-      font-weight: 600;
-      margin-bottom: 1rem;
-      text-align: center;
-      text-transform: uppercase;
-    }
-
-    .modal-row {
-      display: flex;
-      justify-content: space-between;
-      font-size: 1.2rem;
-      margin-bottom: 0.8rem;
-    }
-
-    .modal-score-big {
-      font-size: 2.4rem;
-      font-weight: 700;
-      color: var(--accent);
-      text-align: center;
-      margin-top: 1rem;
-    }
-
-    .btn-restart {
-      margin-top: 2rem;
-      width: 100%;
-      padding: 1.2rem;
-      font-size: 1.4rem;
-      font-weight: 600;
-      border-radius: 1rem;
-      border: none;
-      cursor: pointer;
-      background: #111827;
-      color: var(--text);
-      border: 1px solid rgba(148, 163, 184, 0.6);
-    }
-
-    .btn-restart:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 10px 20px rgba(15, 23, 42, 0.6);
-    }
-
-    @media (max-width: 600px) {
-      .penalties-grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="styles/theme.css" />
+  <link rel="stylesheet" href="styles/layout.css" />
+  <link rel="stylesheet" href="styles/components.css" />
 </head>
-
 <body>
-  <div class="app">
-    <div class="card">
-      <div class="title">Execution – Deductions</div>
-
-      <div class="penalties-grid">
-        <button class="btn-penalty" style="background: var(--p1);" data-value="0.1">0.1</button>
-        <button class="btn-penalty" style="background: var(--p2);" data-value="0.3">0.3</button>
-        <button class="btn-penalty" style="background: var(--p3);" data-value="0.5">0.5</button>
-        <button class="btn-penalty" style="background: var(--p4);" data-value="0.7">0.7</button>
-        <button class="btn-penalty" style="background: var(--p5);" data-value="1.0">1.0</button>
+  <div class="app-shell">
+    <header class="header">
+      <div class="header-title">RG – Execution (E)</div>
+      <div class="header-badge">
+        <span>Panel</span>
+        <strong>E1</strong>
       </div>
+    </header>
 
-      <div class="info-row">
-        <span>Last deduction:</span>
-        <span id="last-deduction">—</span>
-      </div>
+    <main class="main-grid">
+      <!-- Left column: deductions -->
+      <section class="side-column">
+        <div class="card">
+          <div class="card-title">Deductions</div>
+          <div class="value-grid">
+            <button class="value-btn" data-ded="0.1">0.1</button>
+            <button class="value-btn" data-ded="0.3">0.3</button>
+            <button class="value-btn" data-ded="0.5">0.5</button>
+            <button class="value-btn" data-ded="0.7">0.7</button>
+            <button class="value-btn" data-ded="1.0">1.0</button>
+          </div>
+        </div>
 
-      <div class="controls">
-        <button class="btn-undo" id="btn-undo" disabled>Undo</button>
-        <button class="btn-validate" id="btn-validate">Validate</button>
-      </div>
-    </div>
+        <div class="card">
+          <div class="card-title">Actions</div>
+          <button class="btn btn-danger" id="exe-undo">Undo</button>
+          <button class="btn" id="exe-reset">Reset</button>
+        </div>
+      </section>
+
+      <!-- Center panel: total penalty / score -->
+      <section class="center-panel">
+        <div class="center-header">
+          <div>
+            <div class="center-label">Total penalty</div>
+            <div id="exe-penalty" class="center-score">0.00</div>
+          </div>
+          <div>
+            <div class="center-label">E1 (score)</div>
+            <div id="exe-score" style="font-size:1.2rem;">10.00</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Last deduction</div>
+          <div id="exe-current">No deduction applied</div>
+        </div>
+
+        <div class="center-footer">
+          <button class="btn" onclick="openModal('exe-modal')">Insert</button>
+          <button class="btn-main" id="exe-send">Send</button>
+        </div>
+      </section>
+
+      <!-- Right column: history -->
+      <section class="side-column">
+        <div class="card">
+          <div class="card-title">History</div>
+          <div id="exe-history" class="history-list"></div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-item">Base score: 10.00</div>
+      <div class="footer-item">Total penalty · E1 score · Panel E1</div>
+    </footer>
   </div>
 
   <!-- Modal -->
-  <div class="modal-backdrop" id="modal-backdrop">
+  <div class="modal-backdrop" id="exe-modal">
     <div class="modal">
-      <div class="modal-title">Execution Result</div>
-
-      <div class="modal-row">
-        <span>Total deductions</span>
-        <span id="modal-total">0.0</span>
+      <div class="modal-header">
+        <div class="modal-title">Confirm insertion</div>
+        <button class="btn btn-pill btn-danger" onclick="closeModal('exe-modal')">×</button>
       </div>
-
-      <div class="modal-row">
-        <span>Final execution score</span>
-        <span id="modal-score">10.0</span>
+      <div class="modal-body">
+        Insert current penalty into the final E1 score?
       </div>
-
-      <div class="modal-score-big" id="modal-score-big">10.0</div>
-
-      <button class="btn-restart" id="btn-restart">Restart</button>
+      <div class="modal-actions">
+        <button class="btn" onclick="closeModal('exe-modal')">Cancel</button>
+        <button class="btn-main" id="exe-confirm">Insert</button>
+      </div>
     </div>
   </div>
 
-  <script>
-    const deductions = [];
-
-    const penaltyButtons = document.querySelectorAll(".btn-penalty");
-    const lastDeductionSpan = document.getElementById("last-deduction");
-    const undoButton = document.getElementById("btn-undo");
-    const validateButton = document.getElementById("btn-validate");
-
-    const modalBackdrop = document.getElementById("modal-backdrop");
-    const modalTotal = document.getElementById("modal-total");
-    const modalScore = document.getElementById("modal-score");
-    const modalScoreBig = document.getElementById("modal-score-big");
-    const restartButton = document.getElementById("btn-restart");
-
-    function updateLastDeduction() {
-      if (deductions.length === 0) {
-        lastDeductionSpan.textContent = "—";
-        undoButton.disabled = true;
-      } else {
-        lastDeductionSpan.textContent = deductions[deductions.length - 1].toFixed(1);
-        undoButton.disabled = false;
-      }
-    }
-
-    function computeTotal() {
-      return deductions.reduce((sum, value) => sum + value, 0);
-    }
-
-    function computeScore(total) {
-      return Math.max(0, 10 - total);
-    }
-
-    penaltyButtons.forEach(btn => {
-      btn.addEventListener("click", () => {
-        deductions.push(parseFloat(btn.dataset.value));
-        updateLastDeduction();
-      });
-    });
-
-    undoButton.addEventListener("click", () => {
-      deductions.pop();
-      updateLastDeduction();
-    });
-
-    validateButton.addEventListener("click", () => {
-      const total = computeTotal();
-      const score = computeScore(total);
-
-      modalTotal.textContent = total.toFixed(1);
-      modalScore.textContent = score.toFixed(1);
-      modalScoreBig.textContent = score.toFixed(1);
-
-      modalBackdrop.classList.add("visible");
-    });
-
-    restartButton.addEventListener("click", () => {
-      deductions.length = 0;
-      updateLastDeduction();
-      modalBackdrop.classList.remove("visible");
-    });
-  </script>
+  <script src="scripts/common.js"></script>
+  <script src="scripts/exe.js"></script>
 </body>
 </html>
