@@ -1,18 +1,14 @@
 :root {
   --bg: #0f172a;
-  --panel: #111827;
-  --card: #1e293b;
+  --panel: #020617;
+  --card: #111827;
   --text: #e5e7eb;
 
   --accent: #38bdf8;
-  --accent-soft: rgba(56, 189, 248, 0.15);
-  --danger: #ef4444;
-  --success: #22c55e;
-  --warning: #f59e0b;
+  --shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
 
   --radius: 12px;
   --radius-pill: 999px;
-  --shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
 
   --font-main: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
@@ -39,4 +35,5 @@ h1, h2, h3, h4 {
 button {
   font-family: inherit;
   cursor: pointer;
+  border: none;
 }

@@ -1,47 +1,48 @@
-let daTotal = 0;
-let daMax = 0;
-let lastValue = null;
+let daTotal = 4.10; // initial example, you can set to 0
+let daCount = 8;    // example starting index
 
-function updateDaDisplay() {
-  document.getElementById("da-score").textContent = formatScore(daTotal);
-  document.getElementById("da-max").textContent = formatScore(daMax);
+const daScoreEl = document.getElementById("da-score");
+const daHistoryEl = document.getElementById("da-history");
+
+function updateDaScore() {
+  daScoreEl.textContent = formatScore(daTotal);
 }
 
 document.querySelectorAll("[data-da]").forEach(btn => {
   btn.addEventListener("click", () => {
     const value = parseFloat(btn.dataset.da);
-    lastValue = value;
     daTotal += value;
-    if (value > daMax) daMax = value;
-    document.getElementById("da-current").textContent = `Selected: ${formatScore(value)}`;
-    appendHistory("da-history", `+${formatScore(value)} DA`);
-    updateDaDisplay();
+    updateDaScore();
+
+    daCount += 1;
+    const label = `#${daCount} DA ${formatScore(value)} COUNTED`;
+    appendHistory("da-history", label);
   });
 });
 
 document.getElementById("da-undo").addEventListener("click", () => {
-  if (lastValue === null) return;
-  daTotal -= lastValue;
-  appendHistory("da-history", `Undo ${formatScore(lastValue)} DA`);
-  lastValue = null;
-  document.getElementById("da-current").textContent = "No element selected";
-  updateDaDisplay();
+  // simple undo: remove last history item and subtract last value if stored
+  const items = daHistoryEl.querySelectorAll(".history-item");
+  if (!items.length) return;
+  const last = items[items.length - 1];
+  const text = last.textContent;
+  const match = text.match(/DA ([0-9]+\.[0-9]+)/);
+  if (match) {
+    const val = parseFloat(match[1]);
+    daTotal -= val;
+    updateDaScore();
+  }
+  last.remove();
 });
 
-document.getElementById("da-reset").addEventListener("click", () => {
-  daTotal = 0;
-  daMax = 0;
-  lastValue = null;
-  document.getElementById("da-current").textContent = "No element selected";
-  document.getElementById("da-history").innerHTML = "";
-  updateDaDisplay();
+document.getElementById("da-validate").addEventListener("click", () => {
+  document.getElementById("da-final-score").textContent = formatScore(daTotal);
+  openModal("da-final-modal");
 });
 
-document.getElementById("da-confirm").addEventListener("click", () => {
-  closeModal("da-modal");
-  appendHistory("da-history", `Inserted final DA: ${formatScore(daTotal)}`);
+document.getElementById("da-confirm-final").addEventListener("click", () => {
+  appendHistory("da-history", `Final DA validated: ${formatScore(daTotal)}`);
+  closeModal("da-final-modal");
 });
 
-document.getElementById("da-send").addEventListener("click", () => {
-  appendHistory("da-history", `SEND → ${formatScore(daTotal)} (Final DA)`);
-});
+updateDaScore();

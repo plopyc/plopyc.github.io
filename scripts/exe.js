@@ -1,47 +1,42 @@
-let exePenalty = 0;
-let exeBase = 10;
-let lastDeduction = null;
+let exePenalty = 1.90; // initial example, adjust as needed
+const exePenaltyEl = document.getElementById("exe-penalty");
+const exeHistoryEl = document.getElementById("exe-history");
 
-function updateExeDisplay() {
-  document.getElementById("exe-penalty").textContent = formatScore(exePenalty);
-  const score = exeBase - exePenalty;
-  document.getElementById("exe-score").textContent = formatScore(Math.max(score, 0));
+function updateExePenalty() {
+  exePenaltyEl.textContent = formatScore(exePenalty);
 }
 
 document.querySelectorAll("[data-ded]").forEach(btn => {
   btn.addEventListener("click", () => {
     const value = parseFloat(btn.dataset.ded);
-    lastDeduction = value;
     exePenalty += value;
-    document.getElementById("exe-current").textContent = `Applied: -${formatScore(value)}`;
-    appendHistory("exe-history", `-${formatScore(value)} penalty`);
-    updateExeDisplay();
+    updateExePenalty();
+    appendHistory("exe-history", `-${formatScore(value)}`);
   });
 });
 
 document.getElementById("exe-undo").addEventListener("click", () => {
-  if (lastDeduction === null) return;
-  exePenalty -= lastDeduction;
-  appendHistory("exe-history", `Undo -${formatScore(lastDeduction)}`);
-  lastDeduction = null;
-  document.getElementById("exe-current").textContent = "No deduction applied";
-  updateExeDisplay();
+  const items = exeHistoryEl.querySelectorAll(".history-item");
+  if (!items.length) return;
+  const last = items[items.length - 1];
+  const text = last.textContent;
+  const match = text.match(/-([0-9]+\.[0-9]+)/);
+  if (match) {
+    const val = parseFloat(match[1]);
+    exePenalty -= val;
+    updateExePenalty();
+  }
+  last.remove();
 });
 
-document.getElementById("exe-reset").addEventListener("click", () => {
-  exePenalty = 0;
-  lastDeduction = null;
-  document.getElementById("exe-current").textContent = "No deduction applied";
-  document.getElementById("exe-history").innerHTML = "";
-  updateExeDisplay();
+document.getElementById("exe-validate").addEventListener("click", () => {
+  document.getElementById("exe-final-score").textContent = formatScore(exePenalty);
+  openModal("exe-final-modal");
 });
 
-document.getElementById("exe-confirm").addEventListener("click", () => {
-  closeModal("exe-modal");
-  appendHistory("exe-history", `Inserted penalty: ${formatScore(exePenalty)}`);
+document.getElementById("exe-confirm-final").addEventListener("click", () => {
+  appendHistory("exe-history", `Final penalty validated: ${formatScore(exePenalty)}`);
+  closeModal("exe-final-modal");
 });
 
-document.getElementById("exe-send").addEventListener("click", () => {
-  const score = exeBase - exePenalty;
-  appendHistory("exe-history", `SEND → ${formatScore(Math.max(score, 0))} (E1 score)`);
-});
+updateExePenalty();

@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>RG – DB Judging</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+:root {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --panel: #020617;
+    --text: #e5e7eb;
+    --accent: #38bdf8;
+    --accent-dark: #0ea5e9;
+    --btn: #1e293b;
+    --btn-border: rgba(148,163,184,0.6);
+    --undo: #b91c1c;
+    --validate: #22c55e;
+    --overlay: rgba(15,23,42,0.85);
+}
+
+* {
+    box-sizing: border-box;
+    font-family: system-ui, sans-serif;
+}
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.app {
+    width: 100%;
+    height: 100%;
+    padding: 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card {
+    background: var(--card);
+    border-radius: 1.2rem;
+    padding: 1.5rem;
+    width: 100%;
+    max-width: 1100px;
+    max-height: none;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(148,163,184,0.3);
+}
+
+/* HEADER */
+.header {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+}
+
+.mode-pill {
+    padding: 0.4rem 0.9rem;
+    border-radius: 999px;
+    background: var(--panel);
+    border: 1px solid var(--btn-border);
+    cursor: pointer;
+    font-size: 0.8rem;
+    margin-right: 0.5rem;
+}
+
+.mode-pill.active {
+    background: var(--accent);
+    color: #0b1120;
+}
+
+/* MAIN GRID */
+.main {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 0.9fr 2.1fr;
+    gap: 1rem;
+}
+
+/* LEFT CATEGORY TABS */
+.left-tabs {
+    background: var(--panel);
+    border-radius: 1rem;
+    padding: 0.8rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.tab {
+    padding: 0.7rem 0.8rem;
+    background: var(--btn);
+    border-radius: 0.6rem;
+    border: 1px solid var(--btn-border);
+    cursor: pointer;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+.tab.active {
+    background: var(--accent);
+    color: #0b1120;
+}
+
+/* CENTER PANEL */
+.center-panel {
+    background: var(--panel);
+    border-radius: 1rem;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.score-big {
+    text-align: center;
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 0.3rem;
+}
+
+.score-sub {
+    text-align: center;
+    font-size: 0.9rem;
+    color: rgba(148,163,184,0.9);
+    margin-bottom: 1rem;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.4rem;
+    margin-bottom: 0.8rem;
+}
+
+.btn-val {
+    padding: 0.7rem;
+    background: var(--btn);
+    border-radius: 0.6rem;
+    text-align: center;
+    cursor: pointer;
+    border: 1px solid var(--btn-border);
+    font-size: 0.9rem;
+}
+
+.btn-row {
+    display: flex;
+    gap: 0.6rem;
+    margin-top: 0.4rem;
+}
+
+.btn-undo,
+.btn-validate {
+    flex: 1;
+    padding: 0.8rem;
+    border-radius: 0.7rem;
+    text-align: center;
+    cursor: pointer;
+    font-size: 0.9rem;
+    border: 1px solid var(--btn-border);
+}
+
+.btn-reset {
+    flex: 1;
+    padding: 0.8rem;
+    border-radius: 0.7rem;
+    text-align: center;
+    cursor: pointer;
+    font-size: 0.9rem;
+    border: 1px solid var(--btn-border);
+    background: #475569;
+}
+
+.btn-undo {
+    background: var(--undo);
+}
+
+.btn-validate {
+    background: var(--validate);
+}
+
+/* HISTORY */
+.history {
+    margin-top: 1rem;
+    padding-top: 0.6rem;
+    border-top: 1px solid rgba(148,163,184,0.4);
+    display: flex;
+    gap: 0.4rem;
+    overflow-x: auto;
+}
+
+.history-item {
+    background: var(--panel);
+    border-radius: 999px;
+    padding: 0.4rem 0.7rem;
+    border: 1px solid var(--btn-border);
+    display: flex;
+    gap: 0.4rem;
+    font-size: 0.85rem;
+    white-space: nowrap;
+}
+
+.status-counted { color: #22c55e; }
+.status-not { color: #ef4444; }
+
+/* MODAL */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--overlay);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 20;
+}
+
+.modal {
+    background: var(--card);
+    border-radius: 1rem;
+    padding: 1.2rem 1.4rem;
+    width: 320px;
+    border: 1px solid var(--btn-border);
+}
+
+.modal-title {
+    font-size: 1rem;
+    text-transform: uppercase;
+    margin-bottom: 0.6rem;
+}
+
+.modal-score {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 0.3rem;
+}
+
+.modal-penalty {
+    font-size: 0.9rem;
+    color: rgba(148,163,184,0.9);
+    margin-bottom: 0.8rem;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 0.6rem;
+    margin-top: 0.4rem;
+}
+
+.modal-btn {
+    flex: 1;
+    padding: 0.6rem 0.8rem;
+    border-radius: 0.6rem;
+    border: 1px solid var(--btn-border);
+    cursor: pointer;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.modal-confirm {
+    background: var(--accent-dark);
+}
+
+.modal-cancel {
+    background: var(--btn);
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+<div class="card">
+
+<!-- HEADER -->
+<div class="header">
+    <button class="mode-pill active" id="mode-junior">Junior</button>
+    <button class="mode-pill" id="mode-senior">Senior</button>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+    <!-- LEFT TABS -->
+    <div class="left-tabs">
+        <div class="tab active" data-family="jump">Jumps</div>
+        <div class="tab" data-family="balance">Balances</div>
+        <div class="tab" data-family="rotation">Rotations</div>
+        <div class="tab" data-family="risk">Risks (R)</div>
+    </div>
+
+    <!-- CENTER -->
+    <div class="center-panel">
+        <div class="score-big" id="final-score">0.00</div>
+        <div class="score-sub" id="penalty-info">Penalty: 0.00</div>
+
+        <div class="grid" id="value-grid"></div>
+
+        <div class="btn-row">
+            <div class="btn-undo" id="btn-undo">Undo</div>
+            <div class="btn-validate" id="btn-validate">Validate Score</div>
+            <div class="btn-reset" id="btn-reset">Reset</div>
+        </div>
+    </div>
+
+</div>
+
+<!-- HISTORY -->
+<div class="history" id="history"></div>
+
+</div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay">
+    <div class="modal">
+        <div class="modal-title">Final DB score</div>
+        <div class="modal-score" id="modal-score">0.00</div>
+        <div class="modal-penalty" id="modal-penalty">Penalty applied: 0.00</div>
+        <div class="modal-buttons">
+            <div class="modal-btn modal-confirm" id="modal-confirm">Confirm</div>
+            <div class="modal-btn modal-cancel" id="modal-cancel">Cancel</div>
+        </div>
+    </div>
+</div>
+
+<script>
+let mode = "junior";
+let maxDB = 6;
+let maxR = 3;
+
+let entries = []; // chronological: {kind:"DB"/"R", family, value, counted}
+
+/* BUILD VALUE GRID (0.0 → 2.5) */
+const grid = document.getElementById("value-grid");
+for (let i = 0; i <= 25; i++) {
+    const v = (i / 10).toFixed(1);
+    const btn = document.createElement("div");
+    btn.className = "btn-val";
+    btn.textContent = v;
+    btn.dataset.value = v;
+    grid.appendChild(btn);
+}
+
+/* FAMILY TABS */
+let currentFamily = "jump";
+document.querySelectorAll(".tab").forEach(tab => {
+    tab.addEventListener("click", () => {
+        document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+        tab.classList.add("active");
+        currentFamily = tab.dataset.family;
+    });
+});
+
+/* ADD ENTRY */
+function addEntry(valueStr) {
+    const value = parseFloat(valueStr);
+    const kind = currentFamily === "risk" ? "R" : "DB";
+    entries.push({
+        kind,
+        family: currentFamily,
+        value,
+        counted: false
+    });
+    recomputeCounts();
+    render();
+}
+
+/* UNDO */
+document.getElementById("btn-undo").addEventListener("click", () => {
+    if (entries.length === 0) return;
+    entries.pop();
+    recomputeCounts();
+    render();
+});
+
+/*RESET*/
+document.getElementById("btn-reset").addEventListener("click", () => {
+    entries = [];
+    currentPenalty = 0;
+    recomputeCounts();
+    render();
+});
+
+
+/* MODE SWITCH */
+document.getElementById("mode-junior").addEventListener("click", () => {
+    mode = "junior";
+    maxDB = 6;
+    maxR = 3;
+    document.getElementById("mode-junior").classList.add("active");
+    document.getElementById("mode-senior").classList.remove("active");
+    recomputeCounts();
+    render();
+});
+
+document.getElementById("mode-senior").addEventListener("click", () => {
+    mode = "senior";
+    maxDB = 8;
+    maxR = 4;
+    document.getElementById("mode-senior").classList.add("active");
+    document.getElementById("mode-junior").classList.remove("active");
+    recomputeCounts();
+    render();
+});
+
+/* COUNTING RULES + PENALTY */
+let currentPenalty = 0;
+
+function recomputeCounts() {
+    entries.forEach(e => e.counted = false);
+
+    // DB scoring: only positive values, top maxDB
+    const dbCandidates = entries.filter(e => e.kind === "DB" && e.value > 0);
+    const sortedDB = [...dbCandidates].sort((a, b) => b.value - a.value);
+    sortedDB.slice(0, maxDB).forEach(e => e.counted = true);
+
+    // R scoring: chronological, first maxR
+    const rEntries = entries.filter(e => e.kind === "R");
+    rEntries.slice(0, maxR).forEach(e => e.counted = true);
+
+    // Penalty: 0.3 per missing body group (jump/balance/rotation)
+    const groups = ["jump", "balance", "rotation"];
+    currentPenalty = 0;
+    groups.forEach(g => {
+        const hasGroup = entries.some(e => e.kind === "DB" && e.family === g);
+        if (!hasGroup) currentPenalty += 0.3;
+    });
+}
+
+/* RENDER UI */
+function render() {
+    const totalCounted = entries
+        .filter(e => e.counted)
+        .reduce((sum, e) => sum + e.value, 0);
+
+    const finalScore = totalCounted - currentPenalty;
+
+    document.getElementById("final-score").textContent = finalScore.toFixed(2);
+    document.getElementById("penalty-info").textContent =
+        "Penalty: " + currentPenalty.toFixed(2);
+
+    const history = document.getElementById("history");
+    history.innerHTML = "";
+    entries.forEach((e, i) => {
+        const item = document.createElement("div");
+        item.className = "history-item";
+
+        const idx = document.createElement("span");
+        idx.textContent = "#" + (i + 1);
+
+        const label = document.createElement("span");
+        let famLabel = "";
+        if (e.family === "jump") famLabel = "Jump";
+        else if (e.family === "balance") famLabel = "Balance";
+        else if (e.family === "rotation") famLabel = "Rotation";
+        else if (e.family === "risk") famLabel = "Risk";
+
+        label.textContent = famLabel + " " + e.value.toFixed(1);
+
+        const status = document.createElement("span");
+        status.className = e.counted ? "status-counted" : "status-not";
+        status.textContent = e.counted ? "COUNTED" : "NOT COUNTED";
+
+        item.appendChild(idx);
+        item.appendChild(label);
+        item.appendChild(status);
+        history.appendChild(item);
+    });
+}
+
+/* BUTTON CLICKS */
+document.querySelectorAll(".btn-val").forEach(btn => {
+    btn.addEventListener("click", () => addEntry(btn.dataset.value));
+});
+
+/* VALIDATE MODAL */
+const overlay = document.getElementById("modal-overlay");
+const modalScore = document.getElementById("modal-score");
+const modalPenalty = document.getElementById("modal-penalty");
+
+document.getElementById("btn-validate").addEventListener("click", () => {
+    const totalCounted = entries
+        .filter(e => e.counted)
+        .reduce((sum, e) => sum + e.value, 0);
+    const finalScore = totalCounted - currentPenalty;
+
+    modalScore.textContent = finalScore.toFixed(2);
+    modalPenalty.textContent = "Penalty applied: " + currentPenalty.toFixed(2);
+    overlay.style.display = "flex";
+});
+
+document.getElementById("modal-cancel").addEventListener("click", () => {
+    overlay.style.display = "none";
+});
+
+document.getElementById("modal-confirm").addEventListener("click", () => {
+    overlay.style.display = "none";
+});
+
+render();
+</script>
+
+</body>
+</html>

@@ -10,15 +10,15 @@ function closeModal(id) {
   el.classList.remove("open");
 }
 
+function formatScore(value) {
+  return value.toFixed(2);
+}
+
 function appendHistory(listId, text) {
   const list = document.getElementById(listId);
   if (!list) return;
   const item = document.createElement("div");
   item.className = "history-item";
   item.textContent = text;
-  list.prepend(item);
-}
-
-function formatScore(value) {
-  return value.toFixed(2);
+  list.appendChild(item);
 }

@@ -9,12 +9,12 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: linear-gradient(to right, #0f172a, #1f2937);
-  border-bottom: 1px solid rgba(148, 163, 184, 0.3);
+  background: #020617;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.4);
 }
 
 .header-title {
-  font-size: 1.1rem;
+  font-size: 1rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: #9ca3af;
@@ -23,7 +23,7 @@
 .header-badge {
   padding: 6px 12px;
   border-radius: var(--radius-pill);
-  border: 1px solid rgba(148, 163, 184, 0.4);
+  border: 1px solid rgba(148, 163, 184, 0.5);
   font-size: 0.8rem;
   display: inline-flex;
   align-items: center;
@@ -56,42 +56,39 @@
 }
 
 .center-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.center-score {
-  font-size: 3rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+  text-align: center;
 }
 
 .center-label {
   font-size: 0.9rem;
   text-transform: uppercase;
   color: #9ca3af;
+  letter-spacing: 0.12em;
 }
 
-.center-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.center-score {
+  font-size: 3rem;
+  font-weight: 700;
   margin-top: 8px;
 }
 
-.footer {
-  padding: 12px 20px;
+.center-footer {
+  margin-top: 16px;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-top: 1px solid rgba(148, 163, 184, 0.3);
-  background: #020617;
+  justify-content: center;
 }
 
-.footer-item {
-  font-size: 0.8rem;
-  color: #9ca3af;
+.footer {
+  padding: 10px 16px;
+  background: #020617;
+  border-top: 1px solid rgba(148, 163, 184, 0.4);
+}
+
+.history-bar {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  overflow-x: auto;
 }
 
 @media (max-width: 960px) {

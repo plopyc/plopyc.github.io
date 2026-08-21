@@ -4,104 +4,592 @@
   <meta charset="UTF-8" />
   <title>RG – DA Judging</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="styles/theme.css" />
-  <link rel="stylesheet" href="styles/layout.css" />
-  <link rel="stylesheet" href="styles/components.css" />
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --text: #e5e7eb;
+      --accent: #38bdf8;
+
+      --btn0: #334155;
+      --btn02: #0f766e;
+      --btn03: #2563eb;
+      --btn04: #b45309;
+      --btnA: #7c3aed;
+      --btnUndo: #b91c1c;
+      --pill-active: #38bdf8;
+      --pill-active-text: #0b1120;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      margin: 0;
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .app {
+      width: 100%;
+      height: 100%;
+      padding: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 1.2rem;
+      padding: 1.5rem;
+      width: 100%;
+      max-width: 1100px;
+      height: 100%;
+      max-height: 650px;
+      box-shadow: 0 20px 40px rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .header-left {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .header-pill {
+      padding: 0.4rem 0.8rem;
+      border-radius: 999px;
+      background: #020617;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      font-weight: 500;
+      cursor: default;
+    }
+
+    .mode-pill {
+      padding: 0.4rem 0.8rem;
+      border-radius: 999px;
+      background: #020617;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.1s ease, color 0.1s ease, border 0.1s ease;
+    }
+
+    .mode-pill.active {
+      background: var(--pill-active);
+      color: var(--pill-active-text);
+      border-color: var(--pill-active);
+    }
+
+    .header-right {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1.2fr 1fr;
+      gap: 1.5rem;
+      align-items: center;
+    }
+
+    .side-column {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .btn-block {
+      padding: 1rem;
+      border-radius: 0.9rem;
+      background: #020617;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.08s ease, box-shadow 0.08s ease;
+      color: var(--text);
+    }
+
+    .btn-block:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+    }
+
+    .btn-0   { background: var(--btn0); }
+    .btn-02  { background: var(--btn02); }
+    .btn-03  { background: var(--btn03); }
+    .btn-04  { background: var(--btn04); }
+    .btn-A   { background: var(--btnA); }
+    .btn-undo{ background: var(--btnUndo); }
+
+    .btn-undo:disabled {
+      opacity: 0.4;
+      cursor: default;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .center-panel {
+      background: #020617;
+      border-radius: 1rem;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      box-shadow: 0 16px 32px rgba(15, 23, 42, 0.8);
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      height: 100%;
+    }
+
+    .center-score-label {
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      opacity: 0.8;
+      margin-bottom: 0.4rem;
+    }
+
+    .center-score-value {
+      font-size: 3.6rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 1.2rem;
+    }
+
+    .center-last-row {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .center-buttons {
+      display: flex;
+      gap: 1rem;
+      width: 100%;
+      justify-content: center;
+    }
+
+    .btn-main {
+      padding: 1rem 2rem;
+      border-radius: 0.9rem;
+      border: none;
+      cursor: pointer;
+      font-size: 1.2rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      background: var(--accent);
+      color: #0b1120;
+      transition: transform 0.08s ease, box-shadow 0.08s ease;
+    }
+
+    .btn-main:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(56, 189, 248, 0.4);
+    }
+
+    .footer {
+      margin-top: 1rem;
+      padding-top: 0.6rem;
+      border-top: 1px solid rgba(148, 163, 184, 0.4);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      font-size: 0.85rem;
+    }
+
+    .footer-item {
+      padding: 0.35rem 0.6rem;
+      border-radius: 999px;
+      background: #020617;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .footer-item .index {
+      font-weight: 600;
+    }
+
+    .footer-item .value {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .status-counted { color: #22c55e; }
+    .status-not { color: #ef4444; }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.75);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 20;
+    }
+
+    .modal-backdrop.visible {
+      display: flex;
+    }
+
+    .modal {
+      background: #020617;
+      border-radius: 1.2rem;
+      padding: 2rem;
+      width: 100%;
+      max-width: 400px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      box-shadow: 0 24px 48px rgba(15, 23, 42, 0.9);
+    }
+
+    .modal-title {
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .modal-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 1.2rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .modal-score-big {
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-align: center;
+      margin-top: 1rem;
+    }
+
+    .btn-restart {
+      margin-top: 2rem;
+      width: 100%;
+      padding: 1.2rem;
+      font-size: 1.4rem;
+      font-weight: 600;
+      border-radius: 1rem;
+      border: none;
+      cursor: pointer;
+      background: #111827;
+      color: var(--text);
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      transition: transform 0.08s ease, box-shadow 0.08s ease;
+    }
+
+    .btn-restart:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(15, 23, 42, 0.6);
+    }
+
+    @media (max-width: 900px) {
+      .main {
+        grid-template-columns: 1fr;
+      }
+      .center-panel {
+        order: -1;
+      }
+    }
+  </style>
 </head>
+
 <body>
-  <div class="app-shell">
-    <header class="header">
-      <div class="header-title">RG – Difficulty (DA)</div>
-      <div class="header-badge">
-        <span>Panel</span>
-        <strong>DA1</strong>
+  <div class="app">
+    <div class="card">
+      <!-- Header -->
+      <div class="header">
+        <div class="header-left">
+          <span>Mode:</span>
+          <button class="mode-pill active" id="mode-junior">Junior (12 DA)</button>
+          <button class="mode-pill" id="mode-senior">Senior (15 DA)</button>
+        </div>
+        <div class="header-right">
+          <div class="header-pill">DA1</div>
+        </div>
       </div>
-    </header>
 
-    <main class="main-grid">
-      <!-- Left column: values / acrobatics -->
-      <section class="side-column">
-        <div class="card">
-          <div class="card-title">Values</div>
-          <div class="value-grid">
-            <button class="value-btn" data-da="0.0">0.0</button>
-            <button class="value-btn" data-da="0.2">0.2</button>
-            <button class="value-btn" data-da="0.3">0.3</button>
-            <button class="value-btn" data-da="0.4">0.4</button>
-            <button class="value-btn" data-da="0.5">0.5</button>
-            <button class="value-btn" data-da="0.6">0.6</button>
+      <!-- Main -->
+      <div class="main">
+        <!-- Left column -->
+        <div class="side-column">
+          <button class="btn-block btn-0" data-value="0.0">0.0</button>
+          <button class="btn-block btn-02" data-value="0.2">0.2</button>
+          <button class="btn-block btn-A" id="btn-A">
+            <div style="text-align:center;">
+              <div>A</div>
+              <div style="font-size:0.8rem;">Acrobatics</div>
+            </div>
+          </button>
+        </div>
+
+        <!-- Center panel -->
+        <div class="center-panel">
+          <div class="center-score-label">Final score</div>
+          <div class="center-score-value" id="center-score">0.00</div>
+
+          <div class="center-last-row">
+            Last difficulty: <span id="last-difficulty">—</span>
+          </div>
+
+          <div class="center-buttons">
+            <button class="btn-main" id="btn-send">Send</button>
           </div>
         </div>
 
-        <div class="card">
-          <div class="card-title">Group</div>
-          <button class="btn btn-pill">A (Acrobatics)</button>
+        <!-- Right column -->
+        <div class="side-column">
+          <button class="btn-block btn-undo" id="btn-undo" disabled>Undo</button>
+          <button class="btn-block btn-03" data-value="0.3">0.3</button>
+          <button class="btn-block btn-04" data-value="0.4">0.4</button>
         </div>
-
-        <div class="card">
-          <div class="card-title">Actions</div>
-          <button class="btn btn-danger" id="da-undo">Undo</button>
-          <button class="btn" id="da-reset">Reset</button>
-        </div>
-      </section>
-
-      <!-- Center panel: score -->
-      <section class="center-panel">
-        <div class="center-header">
-          <div>
-            <div class="center-label">Final score</div>
-            <div id="da-score" class="center-score">0.00</div>
-          </div>
-          <div>
-            <div class="center-label">Max DA</div>
-            <div id="da-max" style="font-size:1.2rem;">0.00</div>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-title">Current element</div>
-          <div id="da-current">No element selected</div>
-        </div>
-
-        <div class="center-footer">
-          <button class="btn" onclick="openModal('da-modal')">Insert</button>
-          <button class="btn-main" id="da-send">Send</button>
-        </div>
-      </section>
-
-      <!-- Right column: history -->
-      <section class="side-column">
-        <div class="card">
-          <div class="card-title">History</div>
-          <div id="da-history" class="history-list"></div>
-        </div>
-      </section>
-    </main>
-
-    <footer class="footer">
-      <div class="footer-item">Mode: Senior / Junior</div>
-      <div class="footer-item">A counted · Max DA · Panel DA1</div>
-    </footer>
-  </div>
-
-  <!-- Modal -->
-  <div class="modal-backdrop" id="da-modal">
-    <div class="modal">
-      <div class="modal-header">
-        <div class="modal-title">Confirm insertion</div>
-        <button class="btn btn-pill btn-danger" onclick="closeModal('da-modal')">×</button>
       </div>
-      <div class="modal-body">
-        Insert current DA value into the final score?
-      </div>
-      <div class="modal-actions">
-        <button class="btn" onclick="closeModal('da-modal')">Cancel</button>
-        <button class="btn-main" id="da-confirm">Insert</button>
-      </div>
+
+      <!-- Footer list -->
+      <div class="footer" id="footer-list"></div>
     </div>
   </div>
 
-  <script src="scripts/common.js"></script>
-  <script src="scripts/da.js"></script>
+  <!-- Modal -->
+  <div class="modal-backdrop" id="modal-backdrop">
+    <div class="modal">
+      <div class="modal-title">DA Result</div>
+
+      <div class="modal-row">
+        <span>Total DA</span>
+        <span id="modal-total">0.0</span>
+      </div>
+
+      <div class="modal-row">
+        <span>Final DA score</span>
+        <span id="modal-score">0.0</span>
+      </div>
+
+      <div class="modal-score-big" id="modal-score-big">0.0</div>
+
+      <button class="btn-restart" id="btn-restart">Restart</button>
+    </div>
+  </div>
+
+  <script>
+    // Data model
+    let difficulties = []; // { value, isA, counted }
+    let aCount = 0;
+    let maxDA = 12; // default: Junior
+
+    const diffButtons = document.querySelectorAll(".btn-block[data-value]");
+    const btnA = document.getElementById("btn-A");
+    const undoButton = document.getElementById("btn-undo");
+    const sendButton = document.getElementById("btn-send");
+
+    const lastDiffSpan = document.getElementById("last-difficulty");
+    const centerScoreSpan = document.getElementById("center-score");
+    const footerList = document.getElementById("footer-list");
+
+    const modalBackdrop = document.getElementById("modal-backdrop");
+    const modalTotal = document.getElementById("modal-total");
+    const modalScore = document.getElementById("modal-score");
+    const modalScoreBig = document.getElementById("modal-score-big");
+    const restartButton = document.getElementById("btn-restart");
+
+    const modeJuniorBtn = document.getElementById("mode-junior");
+    const modeSeniorBtn = document.getElementById("mode-senior");
+
+    function computeTotal() {
+      return difficulties
+        .filter(d => d.counted)
+        .reduce((sum, d) => sum + d.value, 0);
+    }
+
+    function updateCenterScore() {
+      const total = computeTotal();
+      centerScoreSpan.textContent = total.toFixed(2);
+    }
+
+    function updateLastDifficulty() {
+      if (difficulties.length === 0) {
+        lastDiffSpan.textContent = "—";
+        undoButton.disabled = true;
+      } else {
+        const last = difficulties[difficulties.length - 1];
+        lastDiffSpan.textContent =
+          last.value.toFixed(1) + (last.isA ? " (A)" : "");
+        undoButton.disabled = false;
+      }
+    }
+
+    function updateFooter() {
+      footerList.innerHTML = "";
+      difficulties.forEach((d, index) => {
+        const item = document.createElement("div");
+        item.className = "footer-item";
+
+        const idxSpan = document.createElement("span");
+        idxSpan.className = "index";
+        idxSpan.textContent = "#" + (index + 1);
+
+        const valSpan = document.createElement("span");
+        valSpan.className = "value";
+        valSpan.textContent = "DA " + d.value.toFixed(2);
+
+        const statusSpan = document.createElement("span");
+        statusSpan.className = d.counted ? "status-counted" : "status-not";
+        statusSpan.textContent = d.counted ? "COUNTED" : "NOT COUNTED";
+
+        item.appendChild(idxSpan);
+        item.appendChild(valSpan);
+        item.appendChild(statusSpan);
+        footerList.appendChild(item);
+      });
+    }
+
+    function addDifficulty(value, isAFlag = false) {
+      let finalValue = value;
+      let counted = true;
+
+      // Rule: only first maxDA difficulties counted
+      if (difficulties.length >= maxDA) {
+        finalValue = 0.0;
+        counted = false;
+      }
+
+      // Rule: only first 3 A counted
+      if (isAFlag) {
+        if (aCount >= 3) {
+          finalValue = 0.0;
+          counted = false;
+        }
+        aCount++;
+      }
+
+      difficulties.push({
+        value: finalValue,
+        isA: isAFlag,
+        counted: counted
+      });
+
+      updateLastDifficulty();
+      updateFooter();
+      updateCenterScore();
+    }
+
+    function markLastAsA() {
+      if (difficulties.length === 0) return;
+
+      const last = difficulties[difficulties.length - 1];
+      if (last.isA) return; // already A
+
+      last.isA = true;
+
+      if (aCount >= 3 || !last.counted) {
+        last.value = 0.0;
+        last.counted = false;
+      }
+      aCount++;
+
+      updateLastDifficulty();
+      updateFooter();
+      updateCenterScore();
+    }
+
+    function undoLast() {
+      if (difficulties.length === 0) return;
+
+      const last = difficulties.pop();
+      if (last.isA) aCount--;
+
+      updateLastDifficulty();
+      updateFooter();
+      updateCenterScore();
+    }
+
+    function openModal() {
+      const total = computeTotal();
+      modalTotal.textContent = total.toFixed(2);
+      modalScore.textContent = total.toFixed(2);
+      modalScoreBig.textContent = total.toFixed(2);
+      modalBackdrop.classList.add("visible");
+    }
+
+    function resetAll() {
+      difficulties = [];
+      aCount = 0;
+      lastDiffSpan.textContent = "—";
+      undoButton.disabled = true;
+      footerList.innerHTML = "";
+      centerScoreSpan.textContent = "0.00";
+      modalBackdrop.classList.remove("visible");
+    }
+
+    // Difficulty buttons: add immediately
+    diffButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const value = parseFloat(btn.dataset.value);
+        addDifficulty(value, false);
+      });
+    });
+
+    // A button: mark last as A
+    btnA.addEventListener("click", () => {
+      markLastAsA();
+    });
+
+    // Undo
+    undoButton.addEventListener("click", () => {
+      undoLast();
+    });
+
+    // Send: show modal
+    sendButton.addEventListener("click", () => {
+      openModal();
+    });
+
+    // Restart
+    restartButton.addEventListener("click", () => {
+      resetAll();
+    });
+
+    // Mode switching
+    modeJuniorBtn.addEventListener("click", () => {
+      maxDA = 12;
+      modeJuniorBtn.classList.add("active");
+      modeSeniorBtn.classList.remove("active");
+    });
+
+    modeSeniorBtn.addEventListener("click", () => {
+      maxDA = 15;
+      modeSeniorBtn.classList.add("active");
+      modeJuniorBtn.classList.remove("active");
+    });
+  </script>
 </body>
 </html>
