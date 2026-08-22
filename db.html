@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>RG - DB Judging</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="styles/theme.css">
+  <link rel="stylesheet" href="styles/layout.css">
+  <link rel="stylesheet" href="styles/components.css">
+</head>
+<body>
+  <main class="app">
+    <section class="page-card">
+      <header class="header">
+        <div class="header-left">
+          <a class="mode-pill btn-blue-light" href="index.html">⬅</a>
+          <span>Mode:</span>
+          <button class="mode-pill active" id="mode-junior" type="button">Junior</button>
+          <button class="mode-pill" id="mode-senior" type="button">Senior</button>
+        </div>
+        <span class="header-badge">DB</span>
+      </header>
+
+      <div class="main-grid db-grid">
+        <nav class="left-tabs" aria-label="DB families">
+          <button class="tab active" type="button" data-family="jump">Jumps</button>
+          <button class="tab" type="button" data-family="balance">Balances</button>
+          <button class="tab" type="button" data-family="rotation">Rotations</button>
+          <button class="tab" type="button" data-family="risk">Risks (R)</button>
+        </nav>
+
+        <section class="center-panel">
+          <div class="score-big" id="final-score">0.00</div>
+          <div class="score-sub" id="penalty-info">Penalty: 0.00</div>
+          <div class="grid" id="value-grid"></div>
+          <div class="btn-row">
+            <button class="btn-undo" id="btn-undo" type="button">Undo</button>
+            <button class="btn-validate" id="btn-validate" type="button">Validate Score</button>
+            <button class="btn-reset" id="btn-reset" type="button">Reset</button>
+          </div>
+        </section>
+      </div>
+
+      <footer class="history" id="history"></footer>
+    </section>
+  </main>
+
+  <div class="modal-backdrop" id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="db-result-title">
+    <section class="modal">
+      <h1 class="modal-title" id="db-result-title">Final DB score</h1>
+      <div class="modal-score" id="modal-score">0.00</div>
+      <div class="modal-penalty" id="modal-penalty">Penalty applied: 0.00</div>
+      <div class="modal-buttons">
+        <button class="modal-btn modal-confirm" id="modal-confirm" type="button">Confirm</button>
+        <button class="modal-btn modal-cancel" id="modal-cancel" type="button">Cancel</button>
+      </div>
+    </section>
+  </div>
+
+  <script src="scripts/common.js" defer></script>
+  <script src="scripts/db.js" defer></script>
+</body>
+</html>
