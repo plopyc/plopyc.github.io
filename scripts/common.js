@@ -10,15 +10,20 @@ function closeModal(id) {
   el.classList.remove("open");
 }
 
-function formatScore(value) {
-  return value.toFixed(2);
+function formatScore(value, decimals = 2) {
+  return Number(value).toFixed(decimals);
 }
 
-function appendHistory(listId, text) {
+function appendHistory(listId, text, className = "history-item") {
   const list = document.getElementById(listId);
   if (!list) return;
   const item = document.createElement("div");
-  item.className = "history-item";
+  item.className = className;
   item.textContent = text;
   list.appendChild(item);
+}
+
+function setText(id, value) {
+  const element = document.getElementById(id);
+  if (element) element.textContent = value;
 }

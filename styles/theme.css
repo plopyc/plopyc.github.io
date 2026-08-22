@@ -3,6 +3,8 @@
   --panel: #020617;
   --card: #111827;
   --text: #e5e7eb;
+  --muted: #9ca3af;
+  --border: rgba(148, 163, 184, 0.4);
 
   --accent: #38bdf8;
   --shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
@@ -36,4 +38,13 @@ button {
   font-family: inherit;
   cursor: pointer;
   border: none;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+a {
+  text-decoration: none;
 }

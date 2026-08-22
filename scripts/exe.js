@@ -1,42 +1,44 @@
-let exePenalty = 1.90; // initial example, adjust as needed
-const exePenaltyEl = document.getElementById("exe-penalty");
-const exeHistoryEl = document.getElementById("exe-history");
+const deductions = [];
+const undoButton = document.getElementById("btn-undo");
 
-function updateExePenalty() {
-  exePenaltyEl.textContent = formatScore(exePenalty);
+function totalPenalty() {
+  return deductions.reduce((sum, value) => sum + value, 0);
 }
 
-document.querySelectorAll("[data-ded]").forEach(btn => {
-  btn.addEventListener("click", () => {
-    const value = parseFloat(btn.dataset.ded);
-    exePenalty += value;
-    updateExePenalty();
-    appendHistory("exe-history", `-${formatScore(value)}`);
+function render() {
+  const total = totalPenalty();
+  setText("total-penalty", formatScore(total, 1));
+  setText("execution-score", formatScore(Math.max(0, 10 - total), 1));
+  undoButton.disabled = deductions.length === 0;
+
+  const history = document.getElementById("history");
+  history.replaceChildren();
+  deductions.forEach(value => appendHistory("history", `-${formatScore(value, 1)}`));
+}
+
+document.querySelectorAll("[data-value]").forEach(button => {
+  button.addEventListener("click", () => {
+    deductions.push(parseFloat(button.dataset.value));
+    render();
   });
 });
 
-document.getElementById("exe-undo").addEventListener("click", () => {
-  const items = exeHistoryEl.querySelectorAll(".history-item");
-  if (!items.length) return;
-  const last = items[items.length - 1];
-  const text = last.textContent;
-  const match = text.match(/-([0-9]+\.[0-9]+)/);
-  if (match) {
-    const val = parseFloat(match[1]);
-    exePenalty -= val;
-    updateExePenalty();
-  }
-  last.remove();
+undoButton.addEventListener("click", () => {
+  deductions.pop();
+  render();
 });
 
-document.getElementById("exe-validate").addEventListener("click", () => {
-  document.getElementById("exe-final-score").textContent = formatScore(exePenalty);
-  openModal("exe-final-modal");
+document.getElementById("btn-validate").addEventListener("click", () => {
+  const total = totalPenalty();
+  setText("modal-total", `Total Penalty: ${formatScore(total, 1)}`);
+  setText("modal-score", `Execution Score: ${formatScore(Math.max(0, 10 - total), 1)}`);
+  openModal("modal");
 });
 
-document.getElementById("exe-confirm-final").addEventListener("click", () => {
-  appendHistory("exe-history", `Final penalty validated: ${formatScore(exePenalty)}`);
-  closeModal("exe-final-modal");
+document.getElementById("btn-restart").addEventListener("click", () => {
+  deductions.length = 0;
+  closeModal("modal");
+  render();
 });
 
-updateExePenalty();
+render();

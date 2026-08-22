@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>RG - Artistic Judging</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="styles/theme.css">
+  <link rel="stylesheet" href="styles/layout.css">
+  <link rel="stylesheet" href="styles/components.css">
+  <link rel="stylesheet" href="styles/art.css">
+</head>
+<body>
+  <main class="app">
+    <section class="page-card art-page">
+      <header class="header">
+        <div class="header-left">
+          <a class="mode-pill btn-blue-light" href="index.html">←</a>
+          <span>Mode:</span>
+          <span class="mode-pill active">Artistic</span>
+        </div>
+        <span class="header-badge">ART</span>
+      </header>
+
+      <section id="live-step" class="art-step">
+        <div class="live-layout">
+          <div class="action-column">
+            <button class="art-action connections" id="btn-connections" type="button">
+              <strong>CONNECTIONS</strong><span id="connections-value">0.0</span>
+            </button>
+            <button class="art-action rhythm" id="btn-rhythm" type="button">
+              <strong>RHYTHM</strong><span id="rhythm-value">0.0</span>
+            </button>
+            <button class="art-action interruption" id="btn-interruption" type="button">
+              <strong>INTERRUPTION</strong><span id="interruption-value">0.0</span>
+            </button>
+          </div>
+
+          <div class="score-panel">
+            <span>Total deductions</span>
+            <strong id="live-deductions">0.0</strong>
+            <span>Final score</span>
+            <strong id="live-score">10.0</strong>
+          </div>
+
+          <div class="action-column">
+            <button class="art-action dance-steps" id="btn-dance-step" type="button">
+              <strong>DANCE STEPS</strong><span id="dance-steps-value">0</span>
+            </button>
+            <button class="art-action dynamic" id="btn-dynamic" type="button">
+              <strong>DYNAMIC CHANGES</strong><span id="dynamic-value">0</span>
+            </button>
+            <button class="complete-button" id="btn-complete" type="button">
+              SEQUENCE COMPLETE
+            </button>
+          </div>
+        </div>
+
+        <div class="history-panel">
+          <h2>Action history</h2>
+          <ol id="action-history">
+            <li class="empty-history">No actions yet</li>
+          </ol>
+        </div>
+
+        <div class="screen-actions">
+          <button class="secondary-button" id="btn-undo-live" type="button" disabled>UNDO</button>
+          <button class="cancel-button" type="button" data-cancel>CANCEL</button>
+        </div>
+      </section>
+
+      <section id="final-step" class="art-step is-hidden">
+        <div class="final-layout">
+          <div class="penalty-list">
+            <div class="penalty-row">
+              <strong>Central idea and character</strong>
+              <div><button data-category="central" data-penalty="0.3">0.3</button><button data-category="central" data-penalty="0.6">0.6</button><button data-category="central" data-penalty="1.0">1.0</button></div>
+            </div>
+            <div class="penalty-row">
+              <strong>Physical expression</strong>
+              <div><button data-category="physical" data-penalty="0.3">0.3</button><button data-category="physical" data-penalty="0.6">0.6</button></div>
+            </div>
+            <div class="penalty-row"><strong>Facial expression</strong><div><button data-category="facial" data-penalty="0.3">0.3</button></div></div>
+            <div class="penalty-row"><strong>Use of space</strong><div><button data-category="space" data-penalty="0.3">0.3</button></div></div>
+            <div class="penalty-row"><strong>Musical introduction</strong><div><button data-category="introduction" data-penalty="0.3">0.3</button></div></div>
+            <div class="penalty-row"><strong>End of routine</strong><div><button data-category="ending" data-penalty="0.3">0.3</button></div></div>
+            <div class="penalty-row"><strong>Musical standards</strong><div><button data-category="standards" data-penalty="0.3">0.3</button></div></div>
+          </div>
+
+          <div class="final-side">
+            <div class="score-panel">
+              <span>Total deductions</span>
+              <strong id="final-deductions">0.0</strong>
+              <span>Final score</span>
+              <strong id="final-score">10.0</strong>
+            </div>
+            <button class="secondary-button" id="btn-undo-final" type="button" disabled>UNDO</button>
+            <button class="cancel-button" type="button" data-cancel>CANCEL</button>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script src="scripts/common.js" defer></script>
+  <script src="scripts/art.js" defer></script>
+</body>
+</html>

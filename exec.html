@@ -1,320 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>RG Execution Judging</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<style>
-  :root {
-    --bg: #0f172a;
-    --panel: #111827;
-    --card: #1f2937;
-    --text: #e5e7eb;
-
-    --p01: #22c55e;
-    --p03: #84cc16;
-    --p05: #eab308;
-    --p07: #f97316;
-    --p10: #ef4444;
-    --undo: #7f1d1d;
-
-    --accent: #a855f7;
-  }
-
-  * {
-    box-sizing: border-box;
-    font-family: system-ui, sans-serif;
-  }
-
-  body {
-    margin: 0;
-    background: var(--bg);
-    color: var(--text);
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .screen {
-    width: 100%;
-    height: 100%;
-    max-width: 1024px;
-    max-height: 768px;
-    background: var(--panel);
-    display: grid;
-    grid-template-columns: 1fr 2fr 1fr;
-    grid-template-rows: 1fr auto;
-    gap: 0;
-  }
-
-  /* Side columns */
-  .side {
-    padding: 1.5rem 1rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    gap: 1rem;
-  }
-
-  .btn {
-    border: none;
-    border-radius: 0.75rem;
-    padding: 1.2rem;
-    font-size: 1.6rem;
-    font-weight: 700;
-    cursor: pointer;
-    color: #0b1120;
-  }
-
-  .btn-undo {
-    background: var(--undo);
-    color: var(--text);
-  }
-
-  .btn-01 { background: var(--p01); }
-  .btn-03 { background: var(--p03); }
-  .btn-05 { background: var(--p05); }
-  .btn-07 { background: var(--p07); }
-  .btn-10 { background: var(--p10); }
-
-  /* Center main card */
-  .center {
-    padding: 1.5rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .card {
-    width: 100%;
-    height: 100%;
-    background: var(--card);
-    border-radius: 1rem;
-    padding: 1.5rem 2rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-
-  .total-block {
-    text-align: center;
-  }
-
-  .total-label {
-    font-size: 1.4rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: #9ca3af;
-  }
-
-  .total-value {
-    font-size: 3.2rem;
-    font-weight: 700;
-    margin-top: 0.5rem;
-  }
-
-  .e1-row {
-    margin-top: 1.5rem;
-    font-size: 1.2rem;
-    color: #9ca3af;
-  }
-
-  .score-row {
-    margin-top: 0.5rem;
-    font-size: 2rem;
-    font-weight: 600;
-    color: var(--accent);
-  }
-
-  .send-row {
-    margin-top: 2rem;
-  }
-
-  .btn-send {
-    width: 100%;
-    padding: 1.4rem;
-    font-size: 1.8rem;
-    font-weight: 700;
-    border-radius: 0.75rem;
-    border: none;
-    cursor: pointer;
-    background: var(--accent);
-    color: #0b1120;
-  }
-
-  /* Bottom history */
-  .bottom {
-    grid-column: 1 / 4;
-    background: #020617;
-    padding: 0.8rem 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    overflow-x: auto;
-  }
-
-  .history-item {
-    min-width: 70px;
-    text-align: center;
-    background: #1f2937;
-    border-radius: 0.4rem;
-    padding: 0.4rem 0.2rem;
-    font-size: 1.1rem;
-    font-weight: 600;
-  }
-
-  /* Modal */
-  .modal-backdrop {
-    position: fixed;
-    inset: 0;
-    background: rgba(15, 23, 42, 0.85);
-    display: none;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .modal-backdrop.visible {
-    display: flex;
-  }
-
-  .modal {
-    background: #020617;
-    padding: 1.8rem;
-    border-radius: 0.8rem;
-    width: 90%;
-    max-width: 380px;
-    text-align: center;
-    border: 1px solid #475569;
-  }
-
-  .modal h1 {
-    font-size: 1.8rem;
-    margin-bottom: 1rem;
-  }
-
-  .modal p {
-    font-size: 1.4rem;
-    margin: 0.4rem 0;
-  }
-
-  .btn-restart {
-    margin-top: 1.5rem;
-    width: 100%;
-    padding: 1rem;
-    font-size: 1.4rem;
-    font-weight: 700;
-    border-radius: 0.75rem;
-    border: none;
-    cursor: pointer;
-    background: #111827;
-    color: var(--text);
-    border: 1px solid #475569;
-  }
-</style>
+  <meta charset="UTF-8">
+  <title>RG - Execution Judging</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="styles/theme.css">
+  <link rel="stylesheet" href="styles/layout.css">
+  <link rel="stylesheet" href="styles/components.css">
 </head>
-
-<body>
-<div class="screen">
-
-  <!-- LEFT COLUMN -->
-  <div class="side">
-    <button class="btn btn-undo" id="btn-undo">UNDO</button>
-    <button class="btn btn-01" data-value="0.1">0.1</button>
-    <button class="btn btn-03" data-value="0.3">0.3</button>
-  </div>
-
-  <!-- CENTER -->
-  <div class="center">
-    <div class="card">
-      <div class="total-block">
-        <div class="total-label">TOTAL PENALTY</div>
-        <div class="total-value" id="total-penalty">0.0</div>
-
-        <div class="e1-row">E1 (score)</div>
-        <div class="score-row" id="execution-score">10.0</div>
+<body class="page-exec">
+  <main class="app-shell execution-shell">
+    <section class="execution-layout">
+      <div class="side-stack">
+        <button class="btn btn-side btn-red" id="btn-undo" type="button" disabled>Undo</button>
+        <button class="btn btn-side btn-turquoise" type="button" data-value="0.1">0.1</button>
+        <button class="btn btn-side btn-green" type="button" data-value="0.3">0.3</button>
       </div>
 
-      <div class="send-row">
-        <button class="btn-send" id="btn-send">SEND</button>
+      <section class="center-panel execution-panel">
+        <div class="center-header">
+          <div class="center-label">Total penalty</div>
+          <div class="center-score" id="total-penalty">0.0</div>
+          <div class="center-last-row">E1 (score)</div>
+          <div class="score-row" id="execution-score">10.0</div>
+        </div>
+        <div class="center-footer"><button class="btn-main" id="btn-validate" type="button">Validate</button></div>
+      </section>
+
+      <div class="side-stack">
+        <button class="btn btn-side btn-yellow" type="button" data-value="0.5">0.5</button>
+        <button class="btn btn-side btn-purple" type="button" data-value="0.7">0.7</button>
+        <button class="btn btn-side btn-red" type="button" data-value="1.0">1.0</button>
       </div>
-    </div>
+
+      <footer class="footer history-bar execution-history" id="history"></footer>
+    </section>
+  </main>
+
+  <div class="modal-backdrop" id="modal" role="dialog" aria-modal="true" aria-labelledby="execution-result-title">
+    <section class="modal">
+      <h1 class="modal-title" id="execution-result-title">Final Result</h1>
+      <p id="modal-total">Total Penalty: 0.0</p>
+      <p id="modal-score">Execution Score: 10.0</p>
+      <button class="btn-restart" id="btn-restart" type="button">Restart</button>
+    </section>
   </div>
 
-  <!-- RIGHT COLUMN -->
-  <div class="side">
-    <button class="btn btn-05" data-value="0.5">0.5</button>
-    <button class="btn btn-07" data-value="0.7">0.7</button>
-    <button class="btn btn-10" data-value="1.0">1.0</button>
-  </div>
-
-  <!-- BOTTOM HISTORY -->
-  <div class="bottom" id="history"></div>
-</div>
-
-<!-- MODAL -->
-<div class="modal-backdrop" id="modal">
-  <div class="modal">
-    <h1>Final Result</h1>
-    <p id="modal-total">Total Penalty: 0.0</p>
-    <p id="modal-score">Execution Score: 10.0</p>
-    <button class="btn-restart" id="btn-restart">Restart</button>
-  </div>
-</div>
-
-<script>
-  const deductions = [];
-
-  const totalPenaltyEl = document.getElementById("total-penalty");
-  const executionScoreEl = document.getElementById("execution-score");
-  const historyEl = document.getElementById("history");
-
-  const modal = document.getElementById("modal");
-  const modalTotal = document.getElementById("modal-total");
-  const modalScore = document.getElementById("modal-score");
-
-  function updateDisplay() {
-    const total = deductions.reduce((sum, v) => sum + v, 0);
-    const score = Math.max(0, 10 - total);
-
-    totalPenaltyEl.textContent = total.toFixed(1);
-    executionScoreEl.textContent = score.toFixed(1);
-
-    historyEl.innerHTML = deductions
-      .map(v => `<div class="history-item">-${v.toFixed(1)}</div>`)
-      .join("");
-  }
-
-  document.querySelectorAll("[data-value]").forEach(btn => {
-    btn.addEventListener("click", () => {
-      deductions.push(parseFloat(btn.dataset.value));
-      updateDisplay();
-    });
-  });
-
-  document.getElementById("btn-undo").addEventListener("click", () => {
-    deductions.pop();
-    updateDisplay();
-  });
-
-  document.getElementById("btn-send").addEventListener("click", () => {
-    const total = deductions.reduce((sum, v) => sum + v, 0);
-    const score = Math.max(0, 10 - total);
-
-    modalTotal.textContent = `Total Penalty: ${total.toFixed(1)}`;
-    modalScore.textContent = `Execution Score: ${score.toFixed(1)}`;
-
-    modal.classList.add("visible");
-  });
-
-  document.getElementById("btn-restart").addEventListener("click", () => {
-    deductions.length = 0;
-    updateDisplay();
-    modal.classList.remove("visible");
-  });
-
-  updateDisplay();
-</script>
+  <script src="scripts/common.js" defer></script>
+  <script src="scripts/exe.js" defer></script>
 </body>
 </html>

@@ -1,48 +1,89 @@
-let daTotal = 4.10; // initial example, you can set to 0
-let daCount = 8;    // example starting index
+let difficulties = [];
+let aCount = 0;
+let maxDA = 12;
 
-const daScoreEl = document.getElementById("da-score");
-const daHistoryEl = document.getElementById("da-history");
+const undoButton = document.getElementById("btn-undo");
+const footerList = document.getElementById("footer-list");
+const lastDifficulty = document.getElementById("last-difficulty");
+const centerScore = document.getElementById("center-score");
+const modal = document.getElementById("modal-backdrop");
 
-function updateDaScore() {
-  daScoreEl.textContent = formatScore(daTotal);
+function totalDA() {
+  return difficulties.filter(item => item.counted).reduce((sum, item) => sum + item.value, 0);
 }
 
-document.querySelectorAll("[data-da]").forEach(btn => {
-  btn.addEventListener("click", () => {
-    const value = parseFloat(btn.dataset.da);
-    daTotal += value;
-    updateDaScore();
+function render() {
+  const total = totalDA();
+  centerScore.textContent = formatScore(total);
+  undoButton.disabled = difficulties.length === 0;
+  lastDifficulty.textContent = difficulties.length
+    ? `${formatScore(difficulties[difficulties.length - 1].value, 1)}${difficulties[difficulties.length - 1].isA ? " (A)" : ""}`
+    : "-";
 
-    daCount += 1;
-    const label = `#${daCount} DA ${formatScore(value)} COUNTED`;
-    appendHistory("da-history", label);
+  footerList.replaceChildren();
+  difficulties.forEach((item, index) => {
+    const entry = document.createElement("div");
+    entry.className = "footer-item";
+    entry.innerHTML = `<span class="index">#${index + 1}</span> <span class="value">DA ${formatScore(item.value)}</span> <span class="${item.counted ? "status-counted" : "status-not"}">${item.counted ? "COUNTED" : "NOT COUNTED"}</span>`;
+    footerList.appendChild(entry);
   });
-});
+}
 
-document.getElementById("da-undo").addEventListener("click", () => {
-  // simple undo: remove last history item and subtract last value if stored
-  const items = daHistoryEl.querySelectorAll(".history-item");
-  if (!items.length) return;
-  const last = items[items.length - 1];
-  const text = last.textContent;
-  const match = text.match(/DA ([0-9]+\.[0-9]+)/);
-  if (match) {
-    const val = parseFloat(match[1]);
-    daTotal -= val;
-    updateDaScore();
+function addDifficulty(value, isA = false) {
+  const counted = difficulties.length < maxDA && (!isA || aCount < 3);
+  difficulties.push({ value: counted ? value : 0, isA, counted });
+  if (isA) aCount += 1;
+  render();
+}
+
+function markLastAsA() {
+  if (!difficulties.length) return;
+  const item = difficulties[difficulties.length - 1];
+  if (item.isA) return;
+  item.isA = true;
+  if (aCount >= 3 || !item.counted) {
+    item.value = 0;
+    item.counted = false;
   }
-  last.remove();
+  aCount += 1;
+  render();
+}
+
+document.querySelectorAll("[data-value]").forEach(button => {
+  button.addEventListener("click", () => addDifficulty(parseFloat(button.dataset.value)));
 });
 
-document.getElementById("da-validate").addEventListener("click", () => {
-  document.getElementById("da-final-score").textContent = formatScore(daTotal);
-  openModal("da-final-modal");
+document.getElementById("btn-A").addEventListener("click", markLastAsA);
+undoButton.addEventListener("click", () => {
+  const item = difficulties.pop();
+  if (item && item.isA) aCount -= 1;
+  render();
 });
 
-document.getElementById("da-confirm-final").addEventListener("click", () => {
-  appendHistory("da-history", `Final DA validated: ${formatScore(daTotal)}`);
-  closeModal("da-final-modal");
+document.getElementById("mode-junior").addEventListener("click", event => {
+  maxDA = 12;
+  document.getElementById("mode-senior").classList.remove("active");
+  event.currentTarget.classList.add("active");
+  render();
+});
+document.getElementById("mode-senior").addEventListener("click", event => {
+  maxDA = 15;
+  document.getElementById("mode-junior").classList.remove("active");
+  event.currentTarget.classList.add("active");
+  render();
 });
 
-updateDaScore();
+document.getElementById("btn-validate").addEventListener("click", () => {
+  const total = totalDA();
+  setText("modal-score-big", formatScore(total));
+  openModal("modal-backdrop");
+});
+
+document.getElementById("btn-restart").addEventListener("click", () => {
+  difficulties = [];
+  aCount = 0;
+  closeModal("modal-backdrop");
+  render();
+});
+
+render();
